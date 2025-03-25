@@ -90,7 +90,7 @@ class PruneColumns extends TypeWithSchemaVisitor<Type> {
       Type field = fields.get(i);
       Integer fieldId = getId(originalField);
       if (fieldId != null && selectedIds.contains(fieldId)) {
-        filteredFields.add(originalField);
+        filteredFields.add(field);
       } else if (field != null) {
         filteredFields.add(originalField);
         hasChange = true;
@@ -155,6 +155,9 @@ class PruneColumns extends TypeWithSchemaVisitor<Type> {
   @Override
   public Type primitive(
       org.apache.iceberg.types.Type.PrimitiveType expected, PrimitiveType primitive) {
+    if(expected != null) {
+      return primitive;
+    }
     return null;
   }
 
