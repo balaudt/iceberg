@@ -176,6 +176,9 @@ class ParquetFilters {
   @SuppressWarnings("checkstyle:MethodTypeParameterName")
   private static <C extends Comparable<C>, COL extends Operators.Column<C> & Operators.SupportsLtGt>
       FilterPredicate pred(Operation op, COL col, C value) {
+    if(col.getColumnPath().toDotString().equals("dt")) {
+      return AlwaysTrue.INSTANCE;
+    }
     switch (op) {
       case IS_NULL:
         return FilterApi.eq(col, null);
@@ -228,6 +231,8 @@ class ParquetFilters {
       return (C) Binary.fromString(value.toString());
     } else if (value instanceof ByteBuffer) {
       return (C) Binary.fromReusedByteBuffer((ByteBuffer) value);
+    } else if (value instanceof Boolean) {
+      return (C) value;
     }
     throw new UnsupportedOperationException(
         "Type not supported yet: " + value.getClass().getName());

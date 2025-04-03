@@ -250,10 +250,12 @@ class MessageTypeToType extends ParquetTypeVisitor<Type> {
 
   private Integer getId(org.apache.parquet.schema.Type type) {
     org.apache.parquet.schema.Type.ID id = type.getId();
-    if (id != null) {
-      return id.intValue();
-    } else {
+    if (nameToIdFunc != null) {
       return nameToIdFunc.apply(path(type.getName()));
     }
+    if (id != null) {
+      return id.intValue();
+    }
+    throw new IllegalArgumentException("Cannot find id for field: " + type.getName() + " in " + type);
   }
 }
